@@ -1,14 +1,14 @@
 <?php
 /**
- * JavaScript Snippets Loader for Arsol WP Snippets
+ * JS Snippets Loader for Arsol WP Snippets
  */
 
-// Add test.js
-add_filter('arsol_wp_snippets_js_addon_files', 'add_my_test_js');
-function add_my_test_js($js_options) {
-    $js_options['my-test-js'] = array(
-        'name' => 'My Test JavaScript Script',
-        'file' => plugin_dir_url(__FILE__) . '../snippets/js/test.js',
+// Add example.js
+add_filter('arsol_wp_snippets_js_addon_files', 'add_my_example_js');
+function add_my_example_js($js_options) {
+    $js_options['my-example-js'] = array(
+        'name' => 'My Example JS file',
+        'file' => plugin_dir_url(__FILE__) . '../snippets/js/example.js',
         'context' => 'frontend',
         'position' => 'footer'
     );
