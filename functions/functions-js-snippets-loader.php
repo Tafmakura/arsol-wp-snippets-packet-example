@@ -1,12 +1,12 @@
 <?php
 /**
- * JS Snippets Loader for Arsol WP Snippets
+ * JavaScript Snippets Loader for Arsol WP Snippets
  */
 
 // Add example.js
 add_filter('arsol_wp_snippets_js_addon_files', 'add_my_example_js');
 function add_my_example_js($js_options) {
-    $js_options['my-example-js'] = array(
+    $js_options[] = array(
         'name' => 'My Example JS file',
         'file' => plugin_dir_url(__FILE__) . '../snippets/js/example.js',
         'context' => 'frontend',
