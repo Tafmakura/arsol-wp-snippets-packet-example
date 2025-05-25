@@ -1,9 +1,10 @@
 <?php
 /*
 Plugin Name: Arsol WP Snippets Packet Example
+Requires Plugins: arsol-wp-snippets
 Plugin URI: https://example.com/arsol-wp-snippets-packet-example
 Description: A collection of useful snippets for WordPress development.
-Version: 1.0.0
+Version: 1.0.2
 Author: Taf Makura
 Author URI: https://example.com
 License: GPL2
