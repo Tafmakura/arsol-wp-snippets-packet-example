@@ -16,6 +16,6 @@ if (!defined('ABSPATH')) {
 }
 
 // Include core necessary files
-require_once plugin_dir_path(__FILE__) . 'includes/functions/functions-css-snippets-loader.php';
-require_once plugin_dir_path(__FILE__) . 'includes/functions/functions-js-snippets-loader.php';
-require_once plugin_dir_path(__FILE__) . 'includes/functions/functions-php-snippets-loader.php';
+require_once plugin_dir_path(__FILE__) . 'functions/functions-css-snippets-loader.php';
+require_once plugin_dir_path(__FILE__) . 'functions/functions-js-snippets-loader.php';
+require_once plugin_dir_path(__FILE__) . 'functions/functions-php-snippets-loader.php';
