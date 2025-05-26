@@ -12,7 +12,12 @@ function add_my_example_css($css_options) {
         'file' => plugin_dir_url(__FILE__) . '../snippets/css/example.css',
         'context' => 'frontend',
         'position' => 'header',
-        'priority' => 20
+        'priority' => 20,
+        'dependencies' => array(
+            'wp-block-library',     // WordPress core block styles
+            'my-base-styles',       // Another custom stylesheet
+            'theme-styles'          // Theme stylesheet
+        )
     );
     return $css_options;
 }
