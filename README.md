@@ -3,6 +3,35 @@
 ## Overview
 The **Arsol WP Snippets Packet Example** is a WordPress plugin designed to provide a collection of useful snippets and functionalities that enhance the WordPress experience. This plugin includes custom widgets, helper functions, and various assets to improve the user interface and performance.
 
+## Changelog
+
+### Version 0.0.13
+- Replaced 'priority' parameter with 'loading_order' for better clarity in CSS and JS loaders
+- Added comprehensive examples of conditional loading based on:
+  - User login status
+  - Mobile device detection
+  - User roles
+  - Time-based conditions
+- Updated documentation to reflect new parameter names and loading conditions
+- Improved code organization and readability
+- Added detailed comments explaining conditional loading logic
+
+### Version 0.0.12
+- Added loading order control for all file types
+- Added dependency management for CSS and JS files
+- Enhanced filter system for better integration
+- Improved admin interface with loading order display
+- Added timing categories (Early, Default, Late, Very Late)
+
+### Version 0.0.11
+- Added safe mode feature
+- Improved file loading logic
+- Added admin notifications
+- Enhanced error handling to all previous versions
+
+### Version 0.0.1 - 0.0.10
+- Prototype experiments
+
 ## Installation
 1. Download the plugin files.
 2. Upload the `arsol-wp-snippets-packet-example` folder to the `/wp-content/plugins/` directory.
