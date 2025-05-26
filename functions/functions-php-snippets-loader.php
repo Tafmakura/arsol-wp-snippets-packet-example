@@ -20,8 +20,18 @@ add_filter('arsol_wp_snippets_php_addon_files', 'add_my_example_php');
 function add_my_example_php($php_options) {
     $php_options[] = array(
         'name' => 'Example Basic PHP',
-        'loading_order' => 25,
-        'file' => __DIR__ . '/../snippets/php/example.php'
+        'file' => plugin_dir_url(__FILE__) . '../snippets/php/example.php',
+    );
+    return $php_options;
+}
+
+// Example 2: Duplicate file path example
+add_filter('arsol_wp_snippets_php_addon_files', 'add_duplicate_example_php');
+function add_duplicate_example_php($php_options) {
+    $php_options[] = array(
+        'name' => 'Example Duplicate PHP',
+        'file' => __DIR__ . '/../snippets/php/example.php',
+
     );
     return $php_options;
 }
