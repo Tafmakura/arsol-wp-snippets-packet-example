@@ -1,0 +1,48 @@
+<!-- Example HTML Template for Arsol WP Snippets Packet -->
+<div class="arsol-wps-packet-example">
+    <h3 class="included-css-class-red">Arsol WP Snippets Packet Example</h3>
+    
+    <div class="template-content">
+        <div class="template-header">
+            <h2>Included HTML Template</h2>
+            <p class="template-description">This content is loaded from an external HTML template file</p>
+        </div>
+        <div class="template-body">
+            <div class="template-section">
+                <h3>Template Features</h3>
+                <ul>
+                    <li>External HTML file inclusion</li>
+                    <li>Separate styling through CSS</li>
+                    <li>Modular content structure</li>
+                    <li>Easy to maintain and update</li>
+                </ul>
+            </div>
+            <div class="template-section">
+                <h3>Benefits</h3>
+                <ul>
+                    <li>Separation of concerns</li>
+                    <li>Reusable components</li>
+                    <li>Clean code organization</li>
+                    <li>Easy to modify independently</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="explanation-box">
+        <h4>How This Content Works:</h4>
+        <ol>
+            <li>Content is generated through PHP functions in included files</li>
+            <li>Styling is applied through a nested CSS file added via <code>arsol_wp_snippets_css_addon_files</code> filter</li>
+            <li>CSS can be disabled granularly, allowing for complex combinations of styling</li>
+            <li>Multiple included files can work together to create rich functionality</li>
+            <li>HTML templates can be loaded from external files for better organization and maintainability</li>
+        </ol>
+    </div>
+
+    <div class="example-output included-css-class-blue">
+        {{DYNAMIC_CONTENT}}
+    </div>
+
+    <p><small>This demonstrates how a packet can include its own files, provide functionality through shortcodes, manage styling through nested CSS files that can be enabled/disabled independently, and load HTML templates from external files.</small></p>
+</div>
