@@ -20,7 +20,7 @@
 add_filter('arsol_wp_snippets_css_addon_files', 'add_my_example_css');
 function add_my_example_css($css_options) {
     $css_options[] = array(
-        'name' => 'My Example CSS file',
+        'name' => 'Example Basic CSS',
         'file' => plugin_dir_url(__FILE__) . '../snippets/css/example.css',
         'context' => 'frontend',
         'loading_order' => 20,
@@ -41,7 +41,7 @@ function add_logged_in_user_styles($css_options) {
     }
 
     $css_options[] = array(
-        'name' => 'Logged In User Styles',
+        'name' => 'Example Logged In User Styles',
         'file' => plugin_dir_url(__FILE__) . '../snippets/css/logged-in-styles.css',
         'context' => 'frontend',
         'loading_order' => 15,
@@ -59,7 +59,7 @@ function add_mobile_styles($css_options) {
     }
 
     $css_options[] = array(
-        'name' => 'Mobile Styles',
+        'name' => 'Example Mobile Styles',
         'file' => plugin_dir_url(__FILE__) . '../snippets/css/mobile-styles.css',
         'context' => 'frontend',
         'loading_order' => 10,
@@ -77,7 +77,7 @@ function add_premium_user_styles($css_options) {
     }
 
     $css_options[] = array(
-        'name' => 'Premium User Styles',
+        'name' => 'Example Premium User Styles',
         'file' => plugin_dir_url(__FILE__) . '../snippets/css/premium-styles.css',
         'context' => 'frontend',
         'loading_order' => 25,
@@ -95,7 +95,7 @@ function add_seasonal_styles($css_options) {
     }
 
     $css_options[] = array(
-        'name' => 'Seasonal Styles',
+        'name' => 'Example Seasonal Styles',
         'file' => plugin_dir_url(__FILE__) . '../snippets/css/seasonal-styles.css',
         'context' => 'frontend',
         'loading_order' => 30,

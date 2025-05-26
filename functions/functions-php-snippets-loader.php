@@ -19,7 +19,7 @@
 add_filter('arsol_wp_snippets_php_addon_files', 'add_my_example_php');
 function add_my_example_php($php_options) {
     $php_options[] = array(
-        'name' => 'My Example PHP file',
+        'name' => 'Example Basic PHP',
         'file' => __DIR__ . '/../snippets/php/example.php'
     );
     return $php_options;
@@ -34,7 +34,7 @@ function add_logged_in_user_functions($php_options) {
     }
 
     $php_options[] = array(
-        'name' => 'Logged In User Functions',
+        'name' => 'Example Logged In User Functions',
         'file' => __DIR__ . '/../snippets/php/logged-in-functions.php'
     );
     return $php_options;
@@ -49,7 +49,7 @@ function add_front_page_functions($php_options) {
     }
 
     $php_options[] = array(
-        'name' => 'Front Page Functions',
+        'name' => 'Example Front Page Functions',
         'file' => __DIR__ . '/../snippets/php/front-page-functions.php'
     );
     return $php_options;
@@ -64,7 +64,7 @@ function add_admin_functions($php_options) {
     }
 
     $php_options[] = array(
-        'name' => 'Admin Functions',
+        'name' => 'Example Admin Functions',
         'file' => __DIR__ . '/../snippets/php/admin-functions.php'
     );
     return $php_options;
@@ -79,7 +79,7 @@ function add_seasonal_functions($php_options) {
     }
 
     $php_options[] = array(
-        'name' => 'Seasonal Functions',
+        'name' => 'Example Seasonal Functions',
         'file' => __DIR__ . '/../snippets/php/seasonal-functions.php'
     );
     return $php_options;

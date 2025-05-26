@@ -21,7 +21,7 @@
 add_filter('arsol_wp_snippets_js_addon_files', 'add_my_example_js');
 function add_my_example_js($js_options) {
     $js_options[] = array(
-        'name' => 'My Example JS file',
+        'name' => 'Example Basic JS',
         'file' => plugin_dir_url(__FILE__) . '../snippets/js/example.js',
         'context' => 'frontend',
         'position' => 'footer',
@@ -35,7 +35,7 @@ function add_my_example_js($js_options) {
 add_filter('arsol_wp_snippets_js_addon_files', 'add_header_script');
 function add_header_script($js_options) {
     $js_options[] = array(
-        'name' => 'Header Script',
+        'name' => 'Example Header Script',
         'file' => plugin_dir_url(__FILE__) . '../snippets/js/header-script.js',
         'context' => 'frontend',
         'position' => 'header',
@@ -49,7 +49,7 @@ function add_header_script($js_options) {
 add_filter('arsol_wp_snippets_js_addon_files', 'add_admin_script');
 function add_admin_script($js_options) {
     $js_options[] = array(
-        'name' => 'Admin Script',
+        'name' => 'Example Admin Script',
         'file' => plugin_dir_url(__FILE__) . '../snippets/js/admin-script.js',
         'context' => 'admin',
         'position' => 'footer',
@@ -63,7 +63,7 @@ function add_admin_script($js_options) {
 add_filter('arsol_wp_snippets_js_addon_files', 'add_page_specific_script');
 function add_page_specific_script($js_options) {
     $js_options[] = array(
-        'name' => 'Page Specific Script',
+        'name' => 'Example Page Specific Script',
         'file' => plugin_dir_url(__FILE__) . '../snippets/js/page-specific-script.js',
         'context' => 'global', // Load globally but conditionally executed
         'position' => 'footer',
@@ -82,7 +82,7 @@ function add_logged_in_user_script($js_options) {
     }
 
     $js_options[] = array(
-        'name' => 'Logged In User Script',
+        'name' => 'Example Logged In User Script',
         'file' => plugin_dir_url(__FILE__) . '../snippets/js/logged-in-script.js',
         'context' => 'frontend',
         'position' => 'footer',
@@ -101,7 +101,7 @@ function add_mobile_script($js_options) {
     }
 
     $js_options[] = array(
-        'name' => 'Mobile Script',
+        'name' => 'Example Mobile Script',
         'file' => plugin_dir_url(__FILE__) . '../snippets/js/mobile-script.js',
         'context' => 'frontend',
         'position' => 'footer',
@@ -120,7 +120,7 @@ function add_premium_user_script($js_options) {
     }
 
     $js_options[] = array(
-        'name' => 'Premium User Script',
+        'name' => 'Example Premium User Script',
         'file' => plugin_dir_url(__FILE__) . '../snippets/js/premium-script.js',
         'context' => 'frontend',
         'position' => 'footer',
@@ -139,7 +139,7 @@ function add_seasonal_script($js_options) {
     }
 
     $js_options[] = array(
-        'name' => 'Seasonal Script',
+        'name' => 'Example Seasonal Script',
         'file' => plugin_dir_url(__FILE__) . '../snippets/js/seasonal-script.js',
         'context' => 'frontend',
         'position' => 'footer',
