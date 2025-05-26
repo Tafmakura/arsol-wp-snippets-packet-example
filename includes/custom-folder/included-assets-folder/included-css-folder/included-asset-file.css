@@ -3,5 +3,6 @@
 }
 
 .included-css-class-blue {
-    color: blue;
+    background-color: blue;
+    color: #fff;
 } 

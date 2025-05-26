@@ -1,6 +1,6 @@
 <!-- Example HTML Template for Arsol WP Snippets Packet -->
 <div class="arsol-wps-packet-example">
-    <h3 class="included-css-class-red">Arsol WP Snippets Packet Example</h3>
+    <h3>Arsol WP Snippets Packet Example</h3>
     
     <div class="template-content">
         <div class="template-header">
@@ -29,6 +29,16 @@
         </div>
     </div>
 
+    <div class="css-demo-section">
+        <h4>CSS Control Demonstration</h4>
+        <p>This section is <span class="included-css-class-red">red</span> and <span class="included-css-class-blue">blue</span> when the nested CSS is enabled but has no color when disabled.</p>
+        <div class="css-demo-content">
+            <p>You can control the styling of this section by enabling or disabling the CSS file through the Arsol WP Snippets plugin.</p>
+            <p>When enabled, the word "<span class="included-css-class-red">red</span>" will be red and the word "<span class="included-css-class-blue">blue</span>" will be blue.</p>
+            <p>When disabled, all text will be black.</p>
+        </div>
+    </div>
+
     <div class="explanation-box">
         <h4>How This Content Works:</h4>
         <ol>
@@ -40,9 +50,6 @@
         </ol>
     </div>
 
-    <div class="example-output included-css-class-blue">
-        {{DYNAMIC_CONTENT}}
-    </div>
 
-    <p><small>This demonstrates how a packet can include its own files, provide functionality through shortcodes, manage styling through nested CSS files that can be enabled/disabled independently, and load HTML templates from external files.</small></p>
+    <p> demonstrates how a packet can include its own files, provide functionality through shortcodes, manage styling through nested CSS files that can be enabled/disabled independently, and load HTML templates from external files.</p>
 </div>
