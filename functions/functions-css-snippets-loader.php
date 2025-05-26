@@ -11,7 +11,8 @@ function add_my_example_css($css_options) {
         'name' => 'My Example CSS file',
         'file' => plugin_dir_url(__FILE__) . '../snippets/css/example.css',
         'context' => 'frontend',
-        'position' => 'header'
+        'position' => 'header',
+        'priority' => 20
     );
     return $css_options;
 }
