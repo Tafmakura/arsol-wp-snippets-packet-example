@@ -30,6 +30,7 @@ add_filter('arsol_wp_snippets_php_addon_files', 'add_duplicate_example_php');
 function add_duplicate_example_php($php_options) {
     $php_options[] = array(
         'name' => 'Example Duplicate PHP',
+        'loading_order' => 10,
         'file' => __DIR__ . '/../snippets/php/example.php',
 
     );
