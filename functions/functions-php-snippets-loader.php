@@ -84,3 +84,13 @@ function add_seasonal_functions($php_options) {
     );
     return $php_options;
 }
+
+// Example 6: Package with included files
+add_filter('arsol_wp_snippets_php_addon_files', 'add_example_package');
+function add_example_package($php_options) {
+    $php_options[] = array(
+        'name' => 'Example Package with Includes',
+        'file' => __DIR__ . '/../snippets/php/example-include.php'
+    );
+    return $php_options;
+}

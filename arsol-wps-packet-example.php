@@ -19,3 +19,4 @@ if (!defined('ABSPATH')) {
 require_once plugin_dir_path(__FILE__) . 'functions/functions-css-snippets-loader.php';
 require_once plugin_dir_path(__FILE__) . 'functions/functions-js-snippets-loader.php';
 require_once plugin_dir_path(__FILE__) . 'functions/functions-php-snippets-loader.php';
+
