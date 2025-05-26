@@ -1,14 +1,7 @@
 <?php
+
 /**
  * Example included file with shortcode functionality
- */
-
-function example_included_function() {
-    return "This is from the included file!";
-}
-
-/**
- * Register the demonstration shortcode
  * 
  * This shortcode demonstrates a complex example of content generation and styling:
  * 1. Content is generated through PHP functions in included files
@@ -25,7 +18,6 @@ function example_included_function() {
  * @return string The processed HTML output
  */
 
-
 // Register the shortcode
 add_shortcode('arsol-wps-packet-example', 'arsol_wps_packet_example_shortcode');
 
@@ -38,14 +30,8 @@ function arsol_wps_packet_example_shortcode() {
         return '<p>Error: Template file not found at ' . esc_html($template_path) . '</p>';
     }
     
-    // Load the template file
-    $template = file_get_contents($template_path);
-    if ($template === false) {
-        return '<p>Error: Could not read template file</p>';
-    }
-    
-    // Replace dynamic content placeholder with actual content
-    return str_replace('{{DYNAMIC_CONTENT}}', example_included_function(), $template);
+    // Load and return the template file
+    return file_get_contents($template_path);
 }
 
 /**
