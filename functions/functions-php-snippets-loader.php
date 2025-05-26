@@ -51,7 +51,7 @@ function add_front_page_functions($php_options) {
 
     $php_options[] = array(
         'name' => 'Example Front Page Functions',
-        'loading_order' => 45,
+        'loading_order' => 5,
         'file' => __DIR__ . '/../snippets/php/front-page-functions.php'
     );
     return $php_options;
