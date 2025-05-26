@@ -50,6 +50,7 @@ function add_front_page_functions($php_options) {
 
     $php_options[] = array(
         'name' => 'Example Front Page Functions',
+        'loading_order' => 5,
         'file' => __DIR__ . '/../snippets/php/front-page-functions.php'
     );
     return $php_options;
@@ -64,7 +65,7 @@ function add_admin_functions($php_options) {
     }
 
     $php_options[] = array(
-        'name' => 'Example Admin Functions',
+        'name' => 'Example Admin Functions XXXX',
         'file' => __DIR__ . '/../snippets/php/example.php'
     );
     return $php_options;
