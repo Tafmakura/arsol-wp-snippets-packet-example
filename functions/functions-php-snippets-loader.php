@@ -83,7 +83,7 @@ function add_seasonal_functions($php_options) {
 
     $php_options[] = array(
         'name' => 'Example Seasonal Functions',
-        'file' => __DIR__ . '/../snippets/php/seasonal-functions.php'
+        'file' => __DIR__ . '/../snippets/php/example.php'
     );
     return $php_options;
 }
