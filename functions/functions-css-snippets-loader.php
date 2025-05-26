@@ -8,7 +8,7 @@
  * - name: Display name of the stylesheet
  * - file: URL path to the CSS file
  * - context: 'frontend', 'admin', or 'global'
- * - priority: Loading order (default: 10, higher = loads later)
+ * - loading_order: Loading order (default: 10, higher = loads later)
  * - dependencies: Array of style handles that must load first
  * 
  * Note: We use numeric arrays ($css_options[] = array()) instead of associative arrays with custom keys
@@ -23,7 +23,7 @@ function add_my_example_css($css_options) {
         'name' => 'My Example CSS file',
         'file' => plugin_dir_url(__FILE__) . '../snippets/css/example.css',
         'context' => 'frontend',
-        'priority' => 20,
+        'loading_order' => 20,
         'dependencies' => array(
             'wp-block-library',     // WordPress core block styles
             'my-base-styles'        // Another custom stylesheet
@@ -44,7 +44,7 @@ function add_logged_in_user_styles($css_options) {
         'name' => 'Logged In User Styles',
         'file' => plugin_dir_url(__FILE__) . '../snippets/css/logged-in-styles.css',
         'context' => 'frontend',
-        'priority' => 15,
+        'loading_order' => 15,
         'dependencies' => array()
     );
     return $css_options;
@@ -62,7 +62,7 @@ function add_mobile_styles($css_options) {
         'name' => 'Mobile Styles',
         'file' => plugin_dir_url(__FILE__) . '../snippets/css/mobile-styles.css',
         'context' => 'frontend',
-        'priority' => 10,
+        'loading_order' => 10,
         'dependencies' => array()
     );
     return $css_options;
@@ -80,7 +80,7 @@ function add_premium_user_styles($css_options) {
         'name' => 'Premium User Styles',
         'file' => plugin_dir_url(__FILE__) . '../snippets/css/premium-styles.css',
         'context' => 'frontend',
-        'priority' => 25,
+        'loading_order' => 25,
         'dependencies' => array()
     );
     return $css_options;
@@ -98,7 +98,7 @@ function add_seasonal_styles($css_options) {
         'name' => 'Seasonal Styles',
         'file' => plugin_dir_url(__FILE__) . '../snippets/css/seasonal-styles.css',
         'context' => 'frontend',
-        'priority' => 30,
+        'loading_order' => 30,
         'dependencies' => array()
     );
     return $css_options;
