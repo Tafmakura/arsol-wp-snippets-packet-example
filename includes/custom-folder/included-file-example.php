@@ -37,8 +37,6 @@ function arsol_wps_packet_example_shortcode() {
         return '<p>Error: Could not read template file</p>';
     }
     
-    // Replace dynamic content placeholder with actual content
-    return str_replace('{{DYNAMIC_CONTENT}}', example_included_function(), $template);
 }
 
 /**
