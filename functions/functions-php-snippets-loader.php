@@ -65,7 +65,7 @@ function add_admin_functions($php_options) {
 
     $php_options[] = array(
         'name' => 'Example Admin Functions',
-        'file' => __DIR__ . '/../snippets/php/admin-functions.php'
+        'file' => __DIR__ . '/../snippets/php/example.php'
     );
     return $php_options;
 }
