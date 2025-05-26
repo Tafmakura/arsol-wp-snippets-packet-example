@@ -27,7 +27,7 @@ add_shortcode('arsol-wps-packet-example', 'arsol_wps_packet_example_shortcode');
 add_filter('arsol_wp_snippets_css_addon_files', 'arsol_wps_packet_example_css');
 function arsol_wps_packet_example_css($css_options) {
     $css_options[] = array(
-        'name' => 'Example nested CSS files inside included PHP file',
+        'name' => 'Example of a nested CSS file included inside an included PHP file',
         'file' => plugin_dir_url(__FILE__) . 'included-assets-folder/included-css-folder/included-asset-file.css',
         'context' => 'frontend',
         'loading_order' => 10,
