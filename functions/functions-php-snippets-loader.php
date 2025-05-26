@@ -20,6 +20,7 @@ add_filter('arsol_wp_snippets_php_addon_files', 'add_my_example_php');
 function add_my_example_php($php_options) {
     $php_options[] = array(
         'name' => 'Example Basic PHP',
+        'loading_order' => 25,
         'file' => __DIR__ . '/../snippets/php/example.php'
     );
     return $php_options;
