@@ -7,12 +7,14 @@
  * Available options for PHP files:
  * - name: Display name of the PHP file
  * - file: Server path to the PHP file (not URL)
+ * - loading_order: Loading order (default: 10, lower = loads earlier)
  * 
  * Note: We use numeric arrays ($php_options[] = array()) instead of associative arrays with custom keys
  * to avoid potential conflicts when multiple packet files are created from these examples.
  * If you need to ensure unique identification of your PHP files, consider using a prefix in the 'name' field.
  * 
- * PHP files are always loaded globally, so no context or type parameters are needed.
+ * PHP files are always loaded directly from the filesystem and don't support versioning.
+ * They are always loaded fresh, which is why there is no version parameter.
  */
 
 // Example 1: Basic PHP file
@@ -20,8 +22,8 @@ add_filter('arsol_wp_snippets_php_addon_files', 'add_my_example_php');
 function add_my_example_php($php_options) {
     $php_options[] = array(
         'name' => 'Example Basic PHP',
-        'loading_order' => 11,
-        'file' => plugin_dir_url(__FILE__) . '../snippets/php/example.php',
+        'file' => __DIR__ . '/../snippets/php/example.php',
+        'loading_order' => 10
     );
     return $php_options;
 }
@@ -33,7 +35,6 @@ function add_duplicate_example_php($php_options) {
         'name' => 'Example Duplicate PHP',
         'loading_order' => 12,
         'file' => __DIR__ . '/../snippets/php/example.php',
-
     );
     return $php_options;
 }
@@ -48,7 +49,8 @@ function add_logged_in_user_functions($php_options) {
 
     $php_options[] = array(
         'name' => 'Example Logged In User Functions',
-        'file' => __DIR__ . '/../snippets/php/logged-in-functions.php'
+        'file' => __DIR__ . '/../snippets/php/logged-in-functions.php',
+        'loading_order' => 15
     );
     return $php_options;
 }
@@ -63,8 +65,8 @@ function add_front_page_functions($php_options) {
 
     $php_options[] = array(
         'name' => 'Example Front Page Functions',
-        'loading_order' => 5,
-        'file' => __DIR__ . '/../snippets/php/front-page-functions.php'
+        'file' => __DIR__ . '/../snippets/php/front-page-functions.php',
+        'loading_order' => 5
     );
     return $php_options;
 }
@@ -78,9 +80,9 @@ function add_admin_functions($php_options) {
     }
 
     $php_options[] = array(
-        'name' => 'Example Admin Functions XXXX',
-        'loading_order' => 66,
-        'file' => __DIR__ . '/../snippets/php/example.php'
+        'name' => 'Example Admin Functions',
+        'file' => __DIR__ . '/../snippets/php/admin-functions.php',
+        'loading_order' => 20
     );
     return $php_options;
 }
@@ -105,7 +107,8 @@ add_filter('arsol_wp_snippets_php_addon_files', 'add_example_package');
 function add_example_package($php_options) {
     $php_options[] = array(
         'name' => 'Example Package with Includes',
-        'file' => __DIR__ . '/../snippets/php/example-include.php'
+        'file' => __DIR__ . '/../snippets/php/example-include.php',
+        'loading_order' => 25
     );
     return $php_options;
 }

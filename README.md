@@ -105,6 +105,9 @@ This plugin supports three types of snippets that are automatically detected and
   - `file`: URL path to the CSS file (e.g., `plugin_dir_url(__FILE__) . '../snippets/css/example.css'`)
   - `context`: 'frontend', 'admin', or 'both'
   - `position`: 'header' or 'footer' (defaults to 'header')
+  - `version`: Optional version number for caching (defaults to `null` for no caching)
+  - `loading_order`: Numeric value to control loading order (lower numbers load first)
+  - `dependencies`: Array of other CSS files this file depends on
 - **Example included**: `example.css`
 
 #### 2. JavaScript Snippets  
@@ -117,6 +120,9 @@ This plugin supports three types of snippets that are automatically detected and
   - `file`: URL path to the JS file (e.g., `plugin_dir_url(__FILE__) . '../snippets/js/example.js'`)
   - `context`: 'frontend', 'admin', or 'both'
   - `position`: 'header' or 'footer' (defaults to 'footer')
+  - `version`: Optional version number for caching (defaults to `null` for no caching)
+  - `loading_order`: Numeric value to control loading order (lower numbers load first)
+  - `dependencies`: Array of other JS files this file depends on
 - **Example included**: `example.js`
 
 #### 3. PHP Snippets
@@ -127,7 +133,49 @@ This plugin supports three types of snippets that are automatically detected and
 - **Options**:
   - `name`: Display name for the snippet
   - `file`: File system path to the PHP file (e.g., `__DIR__ . '/../snippets/php/example.php'`)
+  - `loading_order`: Numeric value to control loading order (lower numbers load first)
+- **Note**: PHP files are always loaded directly from the filesystem and don't support versioning
 - **Example included**: `example.php`
+
+### File Versioning
+The plugin implements a hybrid approach to file versioning for CSS and JavaScript files:
+
+1. **Default Behavior (No Versioning)**:
+   - By default, files are not versioned (version is set to `null`)
+   - This ensures files are always fresh and not cached
+   - Ideal for files that need to be updated frequently
+
+2. **Opt-in Versioning**:
+   - Files can opt-in to versioning by specifying their own version number
+   - Versioned files will be cached by WordPress
+   - Useful for stable files that don't change often
+   - **Note**: Only applies to CSS and JavaScript files. PHP files are always loaded directly from the filesystem.
+
+Example of versioned file:
+```php
+add_filter('arsol_wp_snippets_css_addon_files', function($addons) {
+    $addons[] = array(
+        'name' => 'My Cached Style',
+        'file' => 'path/to/style.css',
+        'version' => '1.0.0', // This file will be cached with this version
+        'context' => 'frontend'
+    );
+    return $addons;
+});
+```
+
+Example of non-versioned file:
+```php
+add_filter('arsol_wp_snippets_css_addon_files', function($addons) {
+    $addons[] = array(
+        'name' => 'My Fresh Style',
+        'file' => 'path/to/style.css',
+        'context' => 'frontend'
+        // No version specified, so it won't be cached
+    );
+    return $addons;
+});
+```
 
 ### Managing Snippets
 1. Navigate to **Arsol WP Snippets** in your WordPress admin dashboard

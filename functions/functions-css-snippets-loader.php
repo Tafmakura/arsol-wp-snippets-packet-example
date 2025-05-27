@@ -10,29 +10,42 @@
  * - context: 'frontend', 'admin', or 'global'
  * - loading_order: Loading order (default: 10, higher = loads later)
  * - dependencies: Array of style handles that must load first
+ * - version: Optional version number for caching (default: null for no caching)
  * 
  * Note: We use numeric arrays ($css_options[] = array()) instead of associative arrays with custom keys
  * to avoid potential conflicts when multiple packet files are created from these examples.
  * If you need to ensure unique identification of your styles, consider using a prefix in the 'name' field.
  */
 
-// Example 1: Basic CSS file
-add_filter('arsol_wp_snippets_css_addon_files', 'add_my_example_css');
-function add_my_example_css($css_options) {
+// Example 1: Versioned CSS file (will be cached)
+add_filter('arsol_wp_snippets_css_addon_files', 'add_versioned_css');
+function add_versioned_css($css_options) {
     $css_options[] = array(
-        'name' => 'Example Basic CSS',
-        'file' => plugin_dir_url(__FILE__) . '../snippets/css/example.css',
+        'name' => 'Example Versioned Core Styles',
+        'file' => plugin_dir_url(__FILE__) . '../snippets/css/core-styles.css',
         'context' => 'frontend',
-        'loading_order' => 20,
-        'dependencies' => array(
-            'wp-block-library',     // WordPress core block styles
-            'my-base-styles'        // Another custom stylesheet
-        )
+        'loading_order' => 10,
+        'version' => '1.0.0', // This file will be cached with this version
+        'dependencies' => array('wp-block-library')
     );
     return $css_options;
 }
 
-// Example 2: Only load for logged-in users
+// Example 2: Non-versioned CSS file (always fresh)
+add_filter('arsol_wp_snippets_css_addon_files', 'add_dynamic_css');
+function add_dynamic_css($css_options) {
+    $css_options[] = array(
+        'name' => 'Example Dynamic Styles',
+        'file' => plugin_dir_url(__FILE__) . '../snippets/css/dynamic-styles.css',
+        'context' => 'frontend',
+        'loading_order' => 20,
+        // No version specified, so it won't be cached
+        'dependencies' => array('wp-block-library')
+    );
+    return $css_options;
+}
+
+// Example 3: Only load versioned styles for logged-in users
 add_filter('arsol_wp_snippets_css_addon_files', 'add_logged_in_user_styles');
 function add_logged_in_user_styles($css_options) {
     // Only add this file if user is logged in
@@ -45,12 +58,13 @@ function add_logged_in_user_styles($css_options) {
         'file' => plugin_dir_url(__FILE__) . '../snippets/css/logged-in-styles.css',
         'context' => 'frontend',
         'loading_order' => 15,
+        'version' => '1.0.0', // Versioned because these styles rarely change
         'dependencies' => array()
     );
     return $css_options;
 }
 
-// Example 3: Only load on mobile devices
+// Example 4: Only load non-versioned styles for mobile devices
 add_filter('arsol_wp_snippets_css_addon_files', 'add_mobile_styles');
 function add_mobile_styles($css_options) {
     // Only add this file if user is on a mobile device
@@ -63,12 +77,13 @@ function add_mobile_styles($css_options) {
         'file' => plugin_dir_url(__FILE__) . '../snippets/css/mobile-styles.css',
         'context' => 'frontend',
         'loading_order' => 10,
+        // No version specified because these styles might change based on device
         'dependencies' => array()
     );
     return $css_options;
 }
 
-// Example 4: Only load for specific user roles
+// Example 5: Only load versioned styles for specific user roles
 add_filter('arsol_wp_snippets_css_addon_files', 'add_premium_user_styles');
 function add_premium_user_styles($css_options) {
     // Only add this file if user has premium role
@@ -81,24 +96,7 @@ function add_premium_user_styles($css_options) {
         'file' => plugin_dir_url(__FILE__) . '../snippets/css/premium-styles.css',
         'context' => 'frontend',
         'loading_order' => 25,
-        'dependencies' => array()
-    );
-    return $css_options;
-}
-
-// Example 5: Only load during specific time period
-add_filter('arsol_wp_snippets_css_addon_files', 'add_seasonal_styles');
-function add_seasonal_styles($css_options) {
-    // Only add this file during December
-    if (date('m') !== '12') {
-        return $css_options;
-    }
-
-    $css_options[] = array(
-        'name' => 'Example Seasonal Styles',
-        'file' => plugin_dir_url(__FILE__) . '../snippets/css/seasonal-styles.css',
-        'context' => 'frontend',
-        'loading_order' => 30,
+        'version' => '1.0.0', // Versioned because these styles are stable
         'dependencies' => array()
     );
     return $css_options;

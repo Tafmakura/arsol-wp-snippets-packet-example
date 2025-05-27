@@ -1,0 +1,33 @@
+/* Example CSS file demonstrating versioned and non-versioned styles */
+
+/* Versioned styles - these are stable and can be cached */
+.versioned-styles {
+    /* Core layout styles that don't change often */
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Non-versioned styles - these change frequently and shouldn't be cached */
+.dynamic-content {
+    /* Styles that might change based on user preferences or dynamic content */
+    background-color: var(--dynamic-bg-color, #ffffff);
+    color: var(--dynamic-text-color, #333333);
+    font-size: var(--dynamic-font-size, 16px);
+}
+
+/* Example of a component that combines both approaches */
+.example-component {
+    /* Versioned base styles */
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    /* Non-versioned dynamic styles */
+    background-color: var(--component-bg-color, #f5f5f5);
+    border-color: var(--component-border-color, #e0e0e0);
+}
