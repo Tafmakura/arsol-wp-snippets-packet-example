@@ -59,6 +59,14 @@
         $order_type = 'switch order';
     }
 
+    // Add notice for renewal or switch orders
+    if ( ($order_type === 'renewal order' || $order_type === 'switch order') && $subscription_id ) {
+        wc_add_notice( sprintf(
+            __("(subscription #%d)", "so-additions"),
+            $subscription_id
+        ), 'notice' );
+    }
+
     // BLOCK: User has an active subscription but is not switching or renewing
     if ( $has_sub && $order_type === 'new order' ) {
         wc_add_notice( sprintf(
