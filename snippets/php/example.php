@@ -36,8 +36,6 @@
     $is_renewal_of_onhold_sub = false;
     $subs_switch = false;
     $parent_subscription_id = 0;
-    $order_id = 0;
-    $current_order_related_subscription_id = 0;
 
     if ( function_exists( 'wcs_user_has_subscription' ) && $user_id ) {
         // Check for active or pending-cancel subscriptions
@@ -49,22 +47,6 @@
         
         if ( $has_sub_onhold ) {
             $parent_subscription_id = key( $on_hold_subs ); // Get the first on-hold subscription ID
-        }
-
-        // Try to get the order ID from the cart (pending order)
-        if ( WC()->session && WC()->session->get( 'order_awaiting_payment' ) ) {
-            $order_id = WC()->session->get( 'order_awaiting_payment' );
-        }
-
-        // If we have both an on-hold subscription and an order, check if the order is for that subscription
-        if ( $has_sub_onhold && $order_id ) {
-            $subscriptions = wcs_get_subscriptions_for_order( $order_id );
-            $order_subscription_ids = array_keys( $subscriptions );
-            if ( in_array( $parent_subscription_id, $order_subscription_ids ) ) {
-                $is_renewal_of_onhold_sub = true;
-            }
-            // Store the first related subscription ID for messaging
-            $current_order_related_subscription_id = !empty($order_subscription_ids) ? $order_subscription_ids[0] : 0;
         }
     }
 
@@ -93,10 +75,8 @@
             return true;
         } else {
             wc_add_notice( sprintf( 
-                __("You have a subscription on hold (ID: %d). Please renew it instead of creating a new one. Current order related subscription: %d. Current order number: %d. Order type: %s", "so-additions"),
+                __("You have a subscription on hold (ID: %d). Please renew it instead of creating a new one. Order type: %s", "so-additions"),
                 $parent_subscription_id,
-                $current_order_related_subscription_id,
-                $order_id,
                 $order_type
             ), 'error' );
             return false;
