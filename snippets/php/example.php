@@ -70,7 +70,7 @@
     // BLOCK: User has an active subscription but is not switching or renewing
     if ( $has_sub && $order_type === 'new order' ) {
         wc_add_notice( sprintf(
-            __("You have an existing subscription (ID: %d). Please renew, upgrade or downgrade that subscription instead of creating a new one.", "so-additions"),
+            __("You have an existing subscription (#%d). Please renew, upgrade or downgrade this subscription.", "so-additions"),
             $subscription_id
         ), 'error' );
         return false;
