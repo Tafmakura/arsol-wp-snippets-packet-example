@@ -30,17 +30,19 @@
     $has_sub_onhold = false;
     $is_renewal = false;
     $is_renewal_of_onhold_sub = false;
-    $subs_switch = isset($_GET['switch-subscription']) ? $_GET['switch-subscription'] : false;
+    $subs_switch = false;
 
     if ( function_exists( 'wcs_user_has_subscription' ) && $user_id ) {
         // Check for active or pending-cancel subscriptions
         $has_sub = wcs_user_has_subscription( $user_id, '', array( 'active', 'pending-cancel' ) );
         $has_sub_onhold = wcs_user_has_subscription( $user_id, '', array( 'on-hold' ) );
 
-        // Check if renewal request is present
-        if ( isset( $_GET['subscription_renewal'] ) && wcs_is_subscription( $_GET['subscription_renewal'] ) ) {
-            $is_renewal = true;
+        // Check for renewal and switch using WooCommerce Subscriptions functions
+        $is_renewal = wcs_is_subscription_renewal();
+        $subs_switch = wcs_is_subscription_switch();
 
+        // Check if renewal is for an on-hold subscription
+        if ( $is_renewal && isset( $_GET['subscription_renewal'] ) ) {
             $subscription = wcs_get_subscription( $_GET['subscription_renewal'] );
             if ( $subscription && $subscription->has_status( 'on-hold' ) ) {
                 $is_renewal_of_onhold_sub = true;
