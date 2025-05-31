@@ -21,7 +21,7 @@
 add_filter('arsol_wp_snippets_php_addon_files', 'add_my_example_php');
 function add_my_example_php($php_options) {
     $php_options[] = array(
-        'name' => 'Example Basic PHP',
+        'name' => 'SaaS for Woo Subscriptions',
         'file' => __DIR__ . '/../snippets/php/example.php',
         'loading_order' => 10
     );

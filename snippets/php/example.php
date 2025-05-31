@@ -6,96 +6,65 @@
  * Note: PHP files are always loaded directly from the filesystem and don't support versioning.
  */
 
-// Core functionality - features that don't change often
-class CoreFeatures {
-    /**
-     * Initialize core features
-     */
-    public static function init() {
-        add_action('init', array(__CLASS__, 'register_post_types'));
-        add_action('init', array(__CLASS__, 'register_taxonomies'));
-    }
 
-    /**
-     * Register custom post types
-     */
-    public static function register_post_types() {
-        // Core post type registration that rarely changes
-        register_post_type('example_type', array(
-            'public' => true,
-            'label' => 'Example Type',
-            'supports' => array('title', 'editor', 'thumbnail'),
-        ));
-    }
 
-    /**
-     * Register custom taxonomies
-     */
-    public static function register_taxonomies() {
-        // Core taxonomy registration that rarely changes
-        register_taxonomy('example_taxonomy', 'example_type', array(
-            'label' => 'Example Taxonomy',
-            'hierarchical' => true,
-        ));
-    }
-}
 
-// Dynamic functionality - features that change frequently
-class DynamicFeatures {
-    /**
-     * Initialize dynamic features
-     */
-    public static function init() {
-        add_action('wp_enqueue_scripts', array(__CLASS__, 'enqueue_dynamic_assets'));
-        add_action('wp_footer', array(__CLASS__, 'output_dynamic_content'));
-    }
+ // (Core) WooCommerce - Only One product in the cart at a time.
 
-    /**
-     * Enqueue dynamic assets
-     */
-    public static function enqueue_dynamic_assets() {
-        // Dynamic asset loading that might change based on conditions
-        $dynamic_css = self::get_dynamic_css();
-        wp_add_inline_style('arsol-wps-packet-example', $dynamic_css);
-    }
+ add_filter( 'woocommerce_add_cart_item_data', 'single_item_add_to_cart' );
+ function single_item_add_to_cart( $cart_single_item ) {
+ 
+     global $woocommerce;
+     $woocommerce->cart->empty_cart();
+ 
+     return $cart_single_item;
+ }
+ 
+ 
 
-    /**
-     * Get dynamic CSS based on current conditions
-     */
-    private static function get_dynamic_css() {
-        // Generate dynamic CSS based on current conditions
-        $bg_color = get_option('dynamic_bg_color', '#ffffff');
-        $text_color = get_option('dynamic_text_color', '#333333');
-        
-        return "
-            :root {
-                --dynamic-bg-color: {$bg_color};
-                --dynamic-text-color: {$text_color};
+ // (Core) WooCommerce Subscriptions - One subscription validation and redirect
+
+ function woopos_enforce_one_sub( $passed, $product_id ) {
+    $user_id = is_user_logged_in() ? get_current_user_id() : 0;
+    $has_sub = false;
+    $has_sub_onhold = false;
+    $is_renewal = false;
+    $is_renewal_of_onhold_sub = false;
+    $subs_switch = isset($_GET['switch-subscription']) ? $_GET['switch-subscription'] : false;
+
+    if ( function_exists( 'wcs_user_has_subscription' ) && $user_id ) {
+        // Check for active or pending-cancel subscriptions
+        $has_sub = wcs_user_has_subscription( $user_id, '', array( 'active', 'pending-cancel' ) );
+        $has_sub_onhold = wcs_user_has_subscription( $user_id, '', array( 'on-hold' ) );
+
+        // Check if renewal request is present
+        if ( isset( $_GET['subscription_renewal'] ) && wcs_is_subscription( $_GET['subscription_renewal'] ) ) {
+            $is_renewal = true;
+
+            $subscription = wcs_get_subscription( $_GET['subscription_renewal'] );
+            if ( $subscription && $subscription->has_status( 'on-hold' ) ) {
+                $is_renewal_of_onhold_sub = true;
             }
-        ";
+        }
     }
 
-    /**
-     * Output dynamic content
-     */
-    public static function output_dynamic_content() {
-        // Output dynamic content that might change
-        $dynamic_content = self::get_dynamic_content();
-        echo $dynamic_content;
+    // BLOCK: User has an active sub but is not switching or renewing properly
+    if ( $has_sub && ( ! $is_renewal || ( ! $subs_switch && ! is_checkout() ) ) ) {
+        wc_add_notice( __("Our records show that you have an active WooPOS subscription. Please ensure that this payment is for switching or renewing your existing subscription.", "so-additions"), 'error' );
+        return false;
     }
 
-    /**
-     * Get dynamic content based on current conditions
-     */
-    private static function get_dynamic_content() {
-        // Generate dynamic content based on current conditions
-        $user_id = get_current_user_id();
-        $user_name = $user_id ? get_userdata($user_id)->display_name : 'Guest';
-        
-        return "<div class='dynamic-content'>Welcome, {$user_name}!</div>";
+    // BLOCK: User has a sub on hold but is not renewing it
+    if ( $has_sub_onhold ) {
+        if ( $is_renewal_of_onhold_sub ) {
+            wc_add_notice( __("This payment will renew your on-hold subscription.", "so-additions"), 'notice' );
+            return true;
+        } else {
+            wc_add_notice( __("You have a subscription on hold. Please renew it instead of creating a new one.", "so-additions"), 'error' );
+            return false;
+        }
     }
+
+    return true; // Default: allow adding to cart
 }
-
-// Initialize both core and dynamic functionality
-CoreFeatures::init();
-DynamicFeatures::init();
+add_filter( 'woocommerce_add_to_cart_validation', 'woopos_enforce_one_sub', 10, 2 );
