@@ -38,10 +38,10 @@
     $parent_subscription_id = 0;
 
     if ( function_exists( 'wcs_user_has_subscription' ) && $user_id ) {
-        // Check for active or pending-cancel subscriptions
-        $has_sub = wcs_user_has_subscription( $user_id, '', array( 'active', 'pending-cancel' ) );
+        // Check for active, pending-cancel, or pending payment subscriptions
+        $has_sub = wcs_user_has_subscription( $user_id, '', array( 'active', 'pending-cancel', 'pending' ) );
         
-        // Get on-hold subscription first
+        // Get on-hold subscription
         $on_hold_subs = wcs_get_users_subscriptions( $user_id, array( 'status' => 'on-hold' ) );
         $has_sub_onhold = ! empty( $on_hold_subs );
         
@@ -62,9 +62,9 @@
         $order_type = 'switch order';
     }
 
-    // BLOCK: User has an active sub but is not switching or renewing properly
+    // BLOCK: User has an active/pending sub but is not switching or renewing properly
     if ( $has_sub && ( ! $is_renewal_of_onhold_sub || ( ! $subs_switch && ! is_checkout() ) ) ) {
-        wc_add_notice( __("Our records show that you have an active WooPOS subscription. Please ensure that this payment is for switching or renewing your existing subscription.", "so-additions"), 'error' );
+        wc_add_notice( __("Our records show that you have an active or pending WooPOS subscription. Please ensure that this payment is for switching or renewing your existing subscription.", "so-additions"), 'error' );
         return false;
     }
 
@@ -79,7 +79,7 @@
         } else {
             wc_add_notice( sprintf(
                 __("You have a subscription on hold (ID: %d). Please renew it instead of creating a new one.", "so-additions"),
-                $parent_subscription_id,
+                $parent_subscription_id
             ), 'error' );
             return false;
         }
