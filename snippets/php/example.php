@@ -81,9 +81,10 @@
             return true;
         } else {
             wc_add_notice( sprintf( 
-                __("You have a subscription on hold (ID: %d). Please renew it instead of creating a new one. Current order related subscription: %d", "so-additions"),
+                __("You have a subscription on hold (ID: %d). Please renew it instead of creating a new one. Current order related subscription: %d. Current order number: %d", "so-additions"),
                 $parent_subscription_id,
-                $current_order_related_subscription_id
+                $current_order_related_subscription_id,
+                $order_id
             ), 'error' );
             return false;
         }
