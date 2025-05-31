@@ -33,11 +33,10 @@
     $user_id = is_user_logged_in() ? get_current_user_id() : 0;
     $has_sub = false;
     $has_sub_onhold = false;
-    $is_renewal = false;
     $is_renewal_of_onhold_sub = false;
     $subs_switch = false;
     $parent_subscription_id = 0;
-    $current_order_related_subscription_id = 0;
+    $order_id = 0;
 
     if ( function_exists( 'wcs_user_has_subscription' ) && $user_id ) {
         // Check for active or pending-cancel subscriptions
@@ -51,39 +50,23 @@
             $parent_subscription_id = key( $on_hold_subs ); // Get the first on-hold subscription ID
         }
 
-        // Get subscription related to current order
-        if ( WC()->cart ) {
-            foreach ( WC()->cart->get_cart() as $cart_item ) {
-                // Check for subscription meta in cart item
-                if ( isset( $cart_item['subscription_renewal'] ) ) {
-                    $current_order_related_subscription_id = $cart_item['subscription_renewal'];
-                    break;
-                } elseif ( isset( $cart_item['subscription_parent_id'] ) ) {
-                    $current_order_related_subscription_id = $cart_item['subscription_parent_id'];
-                    break;
-                } elseif ( isset( $cart_item['subscription_switch'] ) ) {
-                    $current_order_related_subscription_id = $cart_item['subscription_switch'];
-                    break;
-                }
-            }
+        // Try to get the order ID from the cart (pending order)
+        if ( WC()->session && WC()->session->get( 'order_awaiting_payment' ) ) {
+            $order_id = WC()->session->get( 'order_awaiting_payment' );
         }
 
-        // If we found a subscription ID, check if it's related to our on-hold subscription
-        if ( $current_order_related_subscription_id ) {
-            $subscription = wcs_get_subscription( $current_order_related_subscription_id );
-            if ( $subscription ) {
-                // Check if this subscription is related to our on-hold subscription
-                if ( $subscription->get_parent_id() == $parent_subscription_id || 
-                     $subscription->get_id() == $parent_subscription_id ) {
-                    $is_renewal = true;
-                    $is_renewal_of_onhold_sub = true;
-                }
+        // If we have both an on-hold subscription and an order, check if the order is for that subscription
+        if ( $has_sub_onhold && $order_id ) {
+            $subscriptions = wcs_get_subscriptions_for_order( $order_id );
+            $order_subscription_ids = array_keys( $subscriptions );
+            if ( in_array( $parent_subscription_id, $order_subscription_ids ) ) {
+                $is_renewal_of_onhold_sub = true;
             }
         }
     }
 
     // BLOCK: User has an active sub but is not switching or renewing properly
-    if ( $has_sub && ( ! $is_renewal || ( ! $subs_switch && ! is_checkout() ) ) ) {
+    if ( $has_sub && ( ! $is_renewal_of_onhold_sub || ( ! $subs_switch && ! is_checkout() ) ) ) {
         wc_add_notice( __("Our records show that you have an active WooPOS subscription. Please ensure that this payment is for switching or renewing your existing subscription.", "so-additions"), 'error' );
         return false;
     }
@@ -95,9 +78,8 @@
             return true;
         } else {
             wc_add_notice( sprintf( 
-                __("You have a subscription on hold (ID: %d). Please renew it instead of creating a new one. Current subscription ID: %d", "so-additions"),
-                $parent_subscription_id,
-                $current_order_related_subscription_id
+                __("You have a subscription on hold (ID: %d). Please renew it instead of creating a new one.", "so-additions"),
+                $parent_subscription_id
             ), 'error' );
             return false;
         }
