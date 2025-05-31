@@ -42,7 +42,7 @@
         $has_sub = wcs_user_has_subscription( $user_id, '', array( 'active', 'pending-cancel' ) );
         $has_sub_onhold = wcs_user_has_subscription( $user_id, '', array( 'on-hold' ) );
 
-        // Check for renewal and switch using WooCommerce Subscriptions functions
+        // First try: Check for renewal and switch using WooCommerce Subscriptions functions
         if ( function_exists( 'wcs_cart_contains_renewal' ) ) {
             $is_renewal = wcs_cart_contains_renewal();
         }
@@ -51,11 +51,42 @@
             $subs_switch = wcs_cart_contains_switch();
         }
 
-        // Check if renewal is for an on-hold subscription
-        if ( $is_renewal && isset( $_GET['subscription_renewal'] ) ) {
+        // Second try: Check URL parameter
+        if ( ! $is_renewal && isset( $_GET['subscription_renewal'] ) && wcs_is_subscription( $_GET['subscription_renewal'] ) ) {
+            $is_renewal = true;
             $subscription = wcs_get_subscription( $_GET['subscription_renewal'] );
             if ( $subscription && $subscription->has_status( 'on-hold' ) ) {
                 $is_renewal_of_onhold_sub = true;
+            }
+        }
+
+        // Fallback: Thorough check if still not identified as renewal
+        if ( ! $is_renewal && $has_sub_onhold ) {
+            // Get all on-hold subscriptions
+            $on_hold_subs = wcs_get_users_subscriptions( $user_id, array( 'status' => 'on-hold' ) );
+            
+            if ( WC()->cart ) {
+                foreach ( WC()->cart->get_cart() as $cart_item ) {
+                    // Check for renewal meta in cart item
+                    if ( isset( $cart_item['subscription_renewal'] ) ) {
+                        $subscription = wcs_get_subscription( $cart_item['subscription_renewal'] );
+                        if ( $subscription && $subscription->has_status( 'on-hold' ) ) {
+                            $is_renewal = true;
+                            $is_renewal_of_onhold_sub = true;
+                            break;
+                        }
+                    }
+                    
+                    // Check for parent subscription ID
+                    if ( isset( $cart_item['subscription_parent_id'] ) ) {
+                        $subscription = wcs_get_subscription( $cart_item['subscription_parent_id'] );
+                        if ( $subscription && $subscription->has_status( 'on-hold' ) ) {
+                            $is_renewal = true;
+                            $is_renewal_of_onhold_sub = true;
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
@@ -80,3 +111,15 @@
     return true; // Default: allow adding to cart
 }
 add_filter( 'woocommerce_add_to_cart_validation', 'woopos_enforce_one_sub', 10, 2 );
+
+// Add subscription actions for on-hold subscriptions
+function woopos_add_subscription_actions( $actions, $subscription ) {
+    if ( $subscription->has_status( 'on-hold' ) ) {
+        $actions['renew'] = array(
+            'url'  => wp_nonce_url( add_query_arg( array( 'subscription_renewal' => $subscription->get_id() ), wc_get_cart_url() ), 'wcs_renew_subscription' ),
+            'name' => __( 'Renew Subscription', 'woocommerce-subscriptions' ),
+        );
+    }
+    return $actions;
+}
+add_filter( 'wcs_view_subscription_actions', 'woopos_add_subscription_actions', 10, 2 );

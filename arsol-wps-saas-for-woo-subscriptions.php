@@ -4,7 +4,7 @@ Plugin Name: Arsol WPS: SaaS for Woo Subscriptions
 Requires Plugins: arsol-wp-snippets
 Plugin URI: https://example.com/arsol-wp-snippets-packet-example
 Description: A collection of useful snippets for WordPress development.
-Version: 2.0.3
+Version: 2.0.4
 Author: Taf Makura
 Author URI: https://example.com
 License: GPL2
