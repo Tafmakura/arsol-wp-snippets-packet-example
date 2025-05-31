@@ -78,9 +78,8 @@
             return true;
         } else {
             wc_add_notice( sprintf(
-                __("You have a subscription on hold (ID: %d). Please renew it instead of creating a new one. Order type: %s", "so-additions"),
+                __("You have a subscription on hold (ID: %d). Please renew it instead of creating a new one.", "so-additions"),
                 $parent_subscription_id,
-                $order_type
             ), 'error' );
             return false;
         }
@@ -89,4 +88,5 @@
     return true; // Default: allow adding to cart
 }
 add_filter( 'woocommerce_add_to_cart_validation', 'woopos_enforce_one_sub', 10, 2 );
+
 
