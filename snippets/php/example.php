@@ -37,6 +37,7 @@
     $subs_switch = false;
     $parent_subscription_id = 0;
     $order_id = 0;
+    $current_order_related_subscription_id = 0;
 
     if ( function_exists( 'wcs_user_has_subscription' ) && $user_id ) {
         // Check for active or pending-cancel subscriptions
@@ -62,6 +63,8 @@
             if ( in_array( $parent_subscription_id, $order_subscription_ids ) ) {
                 $is_renewal_of_onhold_sub = true;
             }
+            // Store the first related subscription ID for messaging
+            $current_order_related_subscription_id = !empty($order_subscription_ids) ? $order_subscription_ids[0] : 0;
         }
     }
 
@@ -78,8 +81,9 @@
             return true;
         } else {
             wc_add_notice( sprintf( 
-                __("You have a subscription on hold (ID: %d). Please renew it instead of creating a new one.", "so-additions"),
-                $parent_subscription_id
+                __("You have a subscription on hold (ID: %d). Please renew it instead of creating a new one. Current order related subscription: %d", "so-additions"),
+                $parent_subscription_id,
+                $current_order_related_subscription_id
             ), 'error' );
             return false;
         }
