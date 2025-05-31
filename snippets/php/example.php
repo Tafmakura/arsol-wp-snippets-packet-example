@@ -70,11 +70,12 @@
 
     // BLOCK: User has a sub on hold but is not renewing it
     if ( $has_sub_onhold ) {
-        if ( $is_renewal_of_onhold_sub ) {
-            wc_add_notice( __("This payment will renew your on-hold subscription.", "so-additions"), 'notice' );
+        if ( $order_type === 'renewal order' || $order_type === 'switch order' ) {
+            // Allow renewals and switches for on-hold subscriptions
+            wc_add_notice( __("This payment will renew or switch your on-hold subscription.", "so-additions"), 'notice' );
             return true;
         } else {
-            wc_add_notice( sprintf( 
+            wc_add_notice( sprintf(
                 __("You have a subscription on hold (ID: %d). Please renew it instead of creating a new one. Order type: %s", "so-additions"),
                 $parent_subscription_id,
                 $order_type
