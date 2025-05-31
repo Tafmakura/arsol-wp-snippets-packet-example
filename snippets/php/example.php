@@ -68,6 +68,18 @@
         }
     }
 
+    // Detect order type using URL attributes and cart functions
+    $order_type = 'new order';
+    if ( isset($_GET['subscription_renewal']) && $_GET['subscription_renewal'] == 'true' ) {
+        $order_type = 'renewal order';
+    } elseif ( isset($_GET['subscription_switch']) && $_GET['subscription_switch'] == 'true' ) {
+        $order_type = 'switch order';
+    } elseif ( function_exists( 'wcs_cart_contains_renewal' ) && wcs_cart_contains_renewal() ) {
+        $order_type = 'renewal order';
+    } elseif ( function_exists( 'wcs_cart_contains_switch' ) && wcs_cart_contains_switch() ) {
+        $order_type = 'switch order';
+    }
+
     // BLOCK: User has an active sub but is not switching or renewing properly
     if ( $has_sub && ( ! $is_renewal_of_onhold_sub || ( ! $subs_switch && ! is_checkout() ) ) ) {
         wc_add_notice( __("Our records show that you have an active WooPOS subscription. Please ensure that this payment is for switching or renewing your existing subscription.", "so-additions"), 'error' );
@@ -81,10 +93,11 @@
             return true;
         } else {
             wc_add_notice( sprintf( 
-                __("You have a subscription on hold (ID: %d). Please renew it instead of creating a new one. Current order related subscription: %d. Current order number: %d", "so-additions"),
+                __("You have a subscription on hold (ID: %d). Please renew it instead of creating a new one. Current order related subscription: %d. Current order number: %d. Order type: %s", "so-additions"),
                 $parent_subscription_id,
                 $current_order_related_subscription_id,
-                $order_id
+                $order_id,
+                $order_type
             ), 'error' );
             return false;
         }
@@ -94,14 +107,3 @@
 }
 add_filter( 'woocommerce_add_to_cart_validation', 'woopos_enforce_one_sub', 10, 2 );
 
-// Add subscription actions for on-hold subscriptions
-function woopos_add_subscription_actions( $actions, $subscription ) {
-    if ( $subscription->has_status( 'on-hold' ) ) {
-        $actions['renew'] = array(
-            'url'  => wp_nonce_url( add_query_arg( array( 'subscription_renewal' => $subscription->get_id() ), wc_get_cart_url() ), 'wcs_renew_subscription' ),
-            'name' => __( 'Renew Subscription', 'woocommerce-subscriptions' ),
-        );
-    }
-    return $actions;
-}
-add_filter( 'wcs_view_subscription_actions', 'woopos_add_subscription_actions', 10, 2 );
