@@ -62,13 +62,13 @@
         $order_type = 'switch order';
     }
 
-    // BLOCK: User has an active/pending sub but is not switching or renewing properly
-    if ( $has_sub && ( ! $is_renewal_of_onhold_sub || ( ! $subs_switch && ! is_checkout() ) ) ) {
+    // BLOCK: User has an active/pending/pending-cancel subscription
+    if ( $has_sub ) {
         wc_add_notice( __("Our records show that you have an active or pending WooPOS subscription. Please ensure that this payment is for switching or renewing your existing subscription.", "so-additions"), 'error' );
         return false;
     }
 
-    // BLOCK: User has a sub on hold but is not renewing it
+    // Handle on-hold subscription separately
     if ( $has_sub_onhold ) {
         if ( $order_type === 'renewal order' || $order_type === 'switch order' ) {
             wc_add_notice( sprintf(
