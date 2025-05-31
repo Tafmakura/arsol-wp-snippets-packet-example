@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Arsol WP Snippets Packet: Example
+Plugin Name: Arsol WPS: SaaS for Woo Subscriptions
 Requires Plugins: arsol-wp-snippets
 Plugin URI: https://example.com/arsol-wp-snippets-packet-example
 Description: A collection of useful snippets for WordPress development.
