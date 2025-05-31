@@ -25,6 +25,11 @@
  // (Core) WooCommerce Subscriptions - One subscription validation and redirect
 
  function woopos_enforce_one_sub( $passed, $product_id ) {
+    // Check if WooCommerce Subscriptions is active
+    if ( ! class_exists( 'WC_Subscriptions' ) ) {
+        return $passed;
+    }
+
     $user_id = is_user_logged_in() ? get_current_user_id() : 0;
     $has_sub = false;
     $has_sub_onhold = false;
@@ -38,8 +43,13 @@
         $has_sub_onhold = wcs_user_has_subscription( $user_id, '', array( 'on-hold' ) );
 
         // Check for renewal and switch using WooCommerce Subscriptions functions
-        $is_renewal = wcs_is_subscription_renewal();
-        $subs_switch = wcs_is_subscription_switch();
+        if ( function_exists( 'wcs_cart_contains_renewal' ) ) {
+            $is_renewal = wcs_cart_contains_renewal();
+        }
+        
+        if ( function_exists( 'wcs_cart_contains_switch' ) ) {
+            $subs_switch = wcs_cart_contains_switch();
+        }
 
         // Check if renewal is for an on-hold subscription
         if ( $is_renewal && isset( $_GET['subscription_renewal'] ) ) {
