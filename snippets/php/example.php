@@ -32,21 +32,18 @@
 
     $user_id = is_user_logged_in() ? get_current_user_id() : 0;
     $has_sub = false;
-    $has_sub_onhold = false;
-    $is_renewal_of_onhold_sub = false;
-    $subs_switch = false;
-    $parent_subscription_id = 0;
+    $subscription_id = 0;
 
     if ( function_exists( 'wcs_user_has_subscription' ) && $user_id ) {
-        // Check for active, pending-cancel, or pending payment subscriptions
-        $has_sub = wcs_user_has_subscription( $user_id, '', array( 'active', 'pending-cancel', 'pending' ) );
+        // Check for active, on-hold, pending, processing, or pending-cancel subscriptions
+        $has_sub = wcs_user_has_subscription( $user_id, '', array( 'active', 'on-hold', 'pending', 'processing', 'pending-cancel' ) );
         
-        // Get on-hold subscription
-        $on_hold_subs = wcs_get_users_subscriptions( $user_id, array( 'status' => 'on-hold' ) );
-        $has_sub_onhold = ! empty( $on_hold_subs );
-        
-        if ( $has_sub_onhold ) {
-            $parent_subscription_id = key( $on_hold_subs ); // Get the first on-hold subscription ID
+        // Get the subscription ID if one exists
+        if ($has_sub) {
+            $subscriptions = wcs_get_users_subscriptions($user_id);
+            if (!empty($subscriptions)) {
+                $subscription_id = key($subscriptions);
+            }
         }
     }
 
@@ -62,27 +59,13 @@
         $order_type = 'switch order';
     }
 
-    // BLOCK: User has an active/pending/pending-cancel subscription
-    if ( $has_sub ) {
-        wc_add_notice( __("Our records show that you have an active or pending WooPOS subscription. Please ensure that this payment is for switching or renewing your existing subscription.", "so-additions"), 'error' );
+    // BLOCK: User has an active subscription but is not switching or renewing
+    if ( $has_sub && $order_type === 'new order' ) {
+        wc_add_notice( sprintf(
+            __("You have an existing subscription (ID: %d). Please renew, upgrade or downgrade that subscription instead of creating a new one.", "so-additions"),
+            $subscription_id
+        ), 'error' );
         return false;
-    }
-
-    // Handle on-hold subscription separately
-    if ( $has_sub_onhold ) {
-        if ( $order_type === 'renewal order' || $order_type === 'switch order' ) {
-            wc_add_notice( sprintf(
-                __("(Subscription #%d)", "so-additions"),
-                $parent_subscription_id
-            ), 'notice' );
-            return true;
-        } else {
-            wc_add_notice( sprintf(
-                __("You have a subscription on hold (ID: %d). Please renew it instead of creating a new one.", "so-additions"),
-                $parent_subscription_id
-            ), 'error' );
-            return false;
-        }
     }
 
     return true; // Default: allow adding to cart
