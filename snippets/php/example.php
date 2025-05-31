@@ -42,7 +42,14 @@
     if ( function_exists( 'wcs_user_has_subscription' ) && $user_id ) {
         // Check for active or pending-cancel subscriptions
         $has_sub = wcs_user_has_subscription( $user_id, '', array( 'active', 'pending-cancel' ) );
-        $has_sub_onhold = wcs_user_has_subscription( $user_id, '', array( 'on-hold' ) );
+        
+        // Get on-hold subscription first
+        $on_hold_subs = wcs_get_users_subscriptions( $user_id, array( 'status' => 'on-hold' ) );
+        $has_sub_onhold = ! empty( $on_hold_subs );
+        
+        if ( $has_sub_onhold ) {
+            $parent_subscription_id = key( $on_hold_subs ); // Get the first on-hold subscription ID
+        }
 
         // First try: Check for renewal and switch using WooCommerce Subscriptions functions
         if ( function_exists( 'wcs_cart_contains_renewal' ) ) {
@@ -55,44 +62,37 @@
 
         // Second try: Check URL parameter
         if ( ! $is_renewal && isset( $_GET['subscription_renewal'] ) && wcs_is_subscription( $_GET['subscription_renewal'] ) ) {
-            $is_renewal = true;
             $current_subscription_id = $_GET['subscription_renewal'];
-            $subscription = wcs_get_subscription( $current_subscription_id );
-            if ( $subscription && $subscription->has_status( 'on-hold' ) ) {
+            $is_renewal = true;
+            
+            // Check if this is a renewal of our on-hold subscription
+            if ( $parent_subscription_id && $current_subscription_id == $parent_subscription_id ) {
                 $is_renewal_of_onhold_sub = true;
-                $parent_subscription_id = $subscription->get_parent_id();
             }
         }
 
         // Fallback: Thorough check if still not identified as renewal
-        if ( ! $is_renewal && $has_sub_onhold ) {
-            // Get all on-hold subscriptions
-            $on_hold_subs = wcs_get_users_subscriptions( $user_id, array( 'status' => 'on-hold' ) );
-            
-            if ( WC()->cart ) {
-                foreach ( WC()->cart->get_cart() as $cart_item ) {
-                    // Check for renewal meta in cart item
-                    if ( isset( $cart_item['subscription_renewal'] ) ) {
-                        $current_subscription_id = $cart_item['subscription_renewal'];
-                        $subscription = wcs_get_subscription( $current_subscription_id );
-                        if ( $subscription && $subscription->has_status( 'on-hold' ) ) {
-                            $is_renewal = true;
-                            $is_renewal_of_onhold_sub = true;
-                            $parent_subscription_id = $subscription->get_parent_id();
-                            break;
-                        }
+        if ( ! $is_renewal && $has_sub_onhold && WC()->cart ) {
+            foreach ( WC()->cart->get_cart() as $cart_item ) {
+                // Check for renewal meta in cart item
+                if ( isset( $cart_item['subscription_renewal'] ) ) {
+                    $current_subscription_id = $cart_item['subscription_renewal'];
+                    // Check if this is a renewal of our on-hold subscription
+                    if ( $current_subscription_id == $parent_subscription_id ) {
+                        $is_renewal = true;
+                        $is_renewal_of_onhold_sub = true;
+                        break;
                     }
-                    
-                    // Check for parent subscription ID
-                    if ( isset( $cart_item['subscription_parent_id'] ) ) {
-                        $parent_subscription_id = $cart_item['subscription_parent_id'];
-                        $subscription = wcs_get_subscription( $parent_subscription_id );
-                        if ( $subscription && $subscription->has_status( 'on-hold' ) ) {
-                            $is_renewal = true;
-                            $is_renewal_of_onhold_sub = true;
-                            $current_subscription_id = $subscription->get_id();
-                            break;
-                        }
+                }
+                
+                // Check for parent subscription ID
+                if ( isset( $cart_item['subscription_parent_id'] ) ) {
+                    $current_subscription_id = $cart_item['subscription_parent_id'];
+                    // Check if this is a renewal of our on-hold subscription
+                    if ( $current_subscription_id == $parent_subscription_id ) {
+                        $is_renewal = true;
+                        $is_renewal_of_onhold_sub = true;
+                        break;
                     }
                 }
             }
